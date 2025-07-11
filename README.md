@@ -21,8 +21,8 @@ RAG (Retrieval-Augmented Generation) 기술을 활용한 지능형 가격 추적
 **Docker & Docker Compose**를 사용하여 로컬 개발 환경을 구성합니다:
 
 - **컨테이너화된 n8n**: 일관된 개발 환경 제공
-- **볼륨 매핑**: 워크플로우 및 데이터 지속성 보장
-- **네트워크 격리**: 서비스 간 안전한 통신
+- **데이터 지속성**: 컨테이너 재시작 시에도 워크플로우 유지
+- **간편한 설정**: 한 번의 명령으로 전체 환경 구성
 
 ## 핵심 아이디어
 
@@ -240,12 +240,31 @@ graph LR
 2. **n8n 컨테이너 시작**
 
    ```bash
-   docker-compose up --build
+   # 빌드 & 백그라운드 실행
+   docker compose up --build -d
+
+   # 포그라운드 실행 (로그 확인)
+   docker compose up --build
    ```
 
 3. **n8n 웹 인터페이스 접속**
+
    - URL: http://localhost:5678
    - 기본 계정: admin / admin
+
+4. **컨테이너 정지 및 정리**
+
+   ```bash
+   # 컨테이너 정지 및 삭제
+   docker compose down
+
+   # 볼륨까지 함께 삭제
+   docker compose down -v
+
+   # 완전 정리 (볼륨, 이미지, 빌드 캐시 모두 삭제)
+   docker compose down -v --rmi all
+   docker system prune -a --volumes
+   ```
 
 ### 개발 환경 구조
 
