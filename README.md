@@ -118,25 +118,21 @@ RAG (Retrieval-Augmented Generation) 기술을 활용한 지능형 가격 추적
 ### 핵심 워크플로우 구성
 
 1. **상품 임베딩 워크플로우** (`product-embedder`)
-
    - BigQuery에서 사내 상품 목록 조회
    - 상품 스펙을 임베딩 모델로 벡터화
    - ChromaDB에 벡터 저장 (컨테이너 내 포함)
 
 2. **크롤링 워크플로우** (`price-crawler`)
-
    - 키워드 기반 타깃 사이트 크롤링
    - Playwright로 동적 콘텐츠 처리
    - 크롤링 결과를 BigQuery에 저장
 
 3. **매칭 워크플로우** (`product-matcher`)
-
    - 크롤링된 상품과 벡터 DB 유사도 계산
    - 높은 유사도 상품 자동 매칭
    - 가격 비교 결과 생성
 
 4. **리포팅 워크플로우** (`report-generator`)
-
    - 가격 분석 리포트 생성
    - Slack API로 알림 전송
    - BigQuery에 히스토리 데이터 업데이트
@@ -187,23 +183,19 @@ graph LR
 ## 주요 기능
 
 1. **n8n 워크플로우 기반 상품 관리**
-
    - BigQuery를 통한 상품 데이터 관리
    - 상품 정보 벡터화 및 저장
    - 상품 카테고리 및 키워드 관리
 
 2. **자동화된 경쟁사 가격 모니터링**
-
    - n8n 스케줄러 기반 실시간 가격 추적
    - 가격 변동 히스토리 관리
 
 3. **RAG 기반 지능형 상품 매칭**
-
    - 벡터 유사도 기반 상품 자동 검출
    - 정확도 높은 가격 비교
 
 4. **n8n 통합 리포팅 및 알림**
-
    - 워크플로우 내장 리포트 생성
    - 임계값 기반 즉시 알림
    - 다양한 조건부 트리거
@@ -248,7 +240,6 @@ graph LR
    ```
 
 3. **n8n 웹 인터페이스 접속**
-
    - URL: http://localhost:5678
    - 기본 계정: admin / admin
 
@@ -258,11 +249,12 @@ graph LR
    # 컨테이너 정지 및 삭제
    docker compose down
 
-   # 볼륨까지 함께 삭제
-   docker compose down -v
+   # 이미지까지 함께 삭제
+   docker compose down --rmi all
 
-   # 완전 정리 (볼륨, 이미지, 빌드 캐시 모두 삭제)
-   docker compose down -v --rmi all
+   # 완전 정리 (로컬 데이터, 이미지, 빌드 캐시 모두 삭제)
+   docker compose down --rmi all
+   rm -rf n8n_data/
    docker system prune -a --volumes
    ```
 
@@ -284,6 +276,40 @@ rag-price-tracker/
 - **Hot Reload**: 코드 변경 시 자동 반영
 - **포트 격리**: 각 서비스별 포트 분리
 - **볼륨 매핑**: 로컬 파일과 컨테이너 동기화
+- **자동 코드 품질 관리**: Git commit 시 Husky + lint-staged로 자동 lint & format
+
+### 개발 도구
+
+#### 📋 **코드 품질 관리**
+
+- **ESLint**: TypeScript 코드 린팅 (ESNext 지원)
+- **Prettier**: 일관된 코드 포맷팅
+- **Husky**: Git hooks 자동화
+- **lint-staged**: Staged 파일만 선택적 처리
+
+#### 🚀 **npm 스크립트**
+
+```bash
+# 개발 명령어
+npm run build        # TypeScript 빌드
+npm run watch        # 파일 변경 감시 & 자동 빌드
+npm run type-check   # 타입 체크만 실행
+
+# 코드 품질 관리
+npm run lint         # ESLint 검사
+npm run lint:fix     # ESLint 자동 수정
+npm run format       # Prettier 포맷팅
+npm run format:check # Prettier 체크만
+```
+
+#### 🎯 **Git Hooks (Husky)**
+
+```bash
+# commit 시 자동 실행
+git commit  # → lint-staged 자동 실행
+            # → staged 파일에 ESLint + Prettier 적용
+            # → 코드 품질 문제 시 commit 차단
+```
 
 ## 🗓️ 개발 로드맵
 

@@ -6,6 +6,19 @@ n8n_data/
 .env.local
 .env.*.local
 
+# Node.js 관련
+node_modules/
+package-lock.json
+yarn.lock
+
+# TypeScript 빌드 결과
+dist/
+*.tsbuildinfo
+
+# 테스트 관련
+coverage/
+*.lcov
+
 # 로그 파일
 *.log
 npm-debug.log*
