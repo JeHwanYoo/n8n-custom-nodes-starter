@@ -16,6 +16,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: ['dist/', 'node_modules/', '*.js', '.husky/'],
+    ignores: ['dist/', 'node_modules/', '.husky/', '**/*.js'],
   },
 )

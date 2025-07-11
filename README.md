@@ -293,6 +293,7 @@ rag-price-tracker/
 # 개발 명령어
 npm run build        # TypeScript 빌드
 npm run watch        # 파일 변경 감시 & 자동 빌드
+npm run dev          # 개발 모드 (watch 별칭)
 npm run type-check   # 타입 체크만 실행
 
 # 코드 품질 관리
@@ -300,6 +301,10 @@ npm run lint         # ESLint 검사
 npm run lint:fix     # ESLint 자동 수정
 npm run format       # Prettier 포맷팅
 npm run format:check # Prettier 체크만
+
+# 노드 개발 도구
+npm run create-node  # 새 커스텀 노드 생성
+npm run reload-nodes # 노드 재로드 (개발 중)
 ```
 
 #### 🎯 **Git Hooks (Husky)**
@@ -310,6 +315,75 @@ git commit  # → lint-staged 자동 실행
             # → staged 파일에 ESLint + Prettier 적용
             # → 코드 품질 문제 시 commit 차단
 ```
+
+### 🔧 **동적 노드 개발**
+
+로컬 개발환경에서는 컨테이너 재빌드 없이도 새로운 노드를 동적으로 추가하고 테스트할 수 있습니다.
+
+#### 📦 **새 노드 생성**
+
+```bash
+# 기본 노드 생성
+npm run create-node my-custom-node
+
+# 옵션을 사용한 노드 생성
+npm run create-node bigquery-reader -- -t input -g database
+npm run create-node slack-notifier -- -t output -g communication
+
+# 직접 스크립트 사용
+./scripts/create-node.sh price-extractor -t transform -g utility
+```
+
+**생성되는 파일:**
+
+- `nodes/my-custom-node/my-custom-node.node.ts` - 노드 구현
+
+#### 🔄 **노드 재로드**
+
+개발 중인 노드를 수정한 후 n8n에서 즉시 테스트할 수 있습니다:
+
+```bash
+# 품질 검사 + 빌드 + 재로드
+npm run reload-nodes
+
+# 직접 스크립트 사용
+./scripts/reload-nodes.sh
+```
+
+**재로드 과정:**
+
+1. **코드 품질 검사** (Prettier 포맷팅 + ESLint 자동 수정)
+2. 로컬에서 TypeScript 빌드
+3. 변경된 파일을 컨테이너에 복사
+4. 컨테이너 내에서 노드 재빌드
+5. n8n 프로세스 재시작
+6. 새로운 노드 활성화
+
+#### 🔍 **개발 워크플로우**
+
+```bash
+# 1. 새 노드 생성
+npm run create-node my-node
+
+# 2. 노드 로직 구현
+# nodes/my-node/my-node.node.ts 편집
+
+# 3. 노드 테스트
+npm run reload-nodes
+
+# 4. n8n 웹 인터페이스에서 확인
+# http://localhost:5678
+
+# 5. 반복 개발
+# 코드 수정 → reload-nodes → 테스트
+```
+
+#### 💡 **개발 팁**
+
+- **실시간 개발**: `npm run dev`로 파일 변경 감시 활성화
+- **문제 해결**: 노드가 인식되지 않으면 `docker compose restart`로 컨테이너 재시작
+- **코드 품질**: 노드 생성 및 재로드 시 자동으로 Prettier + ESLint 적용
+- **디버깅**: 컨테이너 로그 확인 `docker logs rag-price-tracker-n8n`
 
 ## 🗓️ 개발 로드맵
 

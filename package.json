@@ -2,18 +2,24 @@
   "name": "rag-price-tracker-nodes",
   "version": "1.0.0",
   "description": "RAG Price Tracker - n8n Custom Nodes",
+  "type": "module",
   "scripts": {
-    "build": "tsc",
+    "clean": "rm -rf dist",
+    "build": "npm run clean && tsc",
     "watch": "tsc --watch",
     "lint": "eslint nodes/**/*.ts",
     "lint:fix": "eslint nodes/**/*.ts --fix",
     "format": "prettier --write \"nodes/**/*.{ts,js,json}\"",
     "format:check": "prettier --check \"nodes/**/*.{ts,js,json}\"",
     "type-check": "tsc --noEmit",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "create-node": "node scripts/create-node.js",
+    "reload": "node scripts/reload.js",
+    "dev": "pnpm watch"
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
+    "@types/eslint-config-prettier": "^6.11.3",
     "@types/node": "^20.12.12",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
@@ -26,6 +32,7 @@
     "typescript-eslint": "^7.18.0"
   },
   "dependencies": {
+    "change-case": "^5.4.4",
     "n8n-workflow": "^1.0.0"
   },
   "lint-staged": {
