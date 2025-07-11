@@ -252,9 +252,8 @@ graph LR
    # 이미지까지 함께 삭제
    docker compose down --rmi all
 
-   # 완전 정리 (로컬 데이터, 이미지, 빌드 캐시 모두 삭제)
-   docker compose down --rmi all
-   rm -rf n8n_data/
+   # 완전 정리 (볼륨, 이미지, 빌드 캐시 모두 삭제)
+   docker compose down --rmi all -v
    docker system prune -a --volumes
    ```
 
@@ -265,17 +264,16 @@ rag-price-tracker/
 ├── docker-compose.yml          # 서비스 구성
 ├── Dockerfile                  # n8n 컨테이너 이미지
 ├── .gitignore                  # Git 제외 파일
-├── n8n_data/                   # n8n 워크플로우 데이터 (git 제외)
 ├── nodes/                      # 커스텀 n8n 노드들
 └── workflows/                  # 워크플로우 템플릿
 ```
 
 ### 주요 특징
 
-- **데이터 지속성**: `n8n_data/` 디렉토리에 워크플로우 및 설정 저장
+- **데이터 지속성**: Docker named volume으로 워크플로우 및 설정 저장
 - **Hot Reload**: 코드 변경 시 자동 반영
 - **포트 격리**: 각 서비스별 포트 분리
-- **볼륨 매핑**: 로컬 파일과 컨테이너 동기화
+- **볼륨 관리**: Docker Volume으로 데이터 분리 및 관리
 - **자동 코드 품질 관리**: Git commit 시 Husky + lint-staged로 자동 lint & format
 
 ### 개발 도구

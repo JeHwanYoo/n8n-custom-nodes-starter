@@ -10,5 +10,10 @@ services:
       - GENERIC_TIMEZONE=Asia/Seoul
       - TZ=Asia/Seoul
     volumes:
-      - ./n8n_data:/home/node/.n8n
+      - n8n_data:/home/node/.n8n
+      - n8n_custom:/home/node/.n8n/custom
     restart: unless-stopped
+
+volumes:
+  n8n_data:
+  n8n_custom:

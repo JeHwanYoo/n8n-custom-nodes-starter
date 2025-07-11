@@ -2,7 +2,6 @@
 
 import { execSync } from 'child_process'
 import fs from 'fs'
-import path from 'path'
 
 // 색상 코드
 const colors = {
@@ -75,27 +74,24 @@ function buildProject() {
 
 function copyToN8n() {
   try {
-    // n8n_data/custom 디렉토리 생성 (기존 내용 완전 삭제 후 재생성)
-    const customDir = path.join('n8n_data', 'custom')
+    log('blue', '📦 컨테이너로 파일 복사 중...')
 
-    // 기존 custom 디렉토리가 있으면 완전히 삭제
-    if (fs.existsSync(customDir)) {
-      fs.rmSync(customDir, { recursive: true, force: true })
-    }
+    // 기존 custom 디렉토리 내용 삭제
+    runCommand(
+      `docker exec ${CONTAINER_NAME} rm -rf /home/node/.n8n/custom/*`,
+      {
+        silent: true,
+        stdio: 'ignore',
+      },
+    )
 
-    // 새로 생성
-    fs.mkdirSync(customDir, { recursive: true })
-
-    // dist 디렉토리 내용을 n8n_data/custom으로 복사
+    // dist 디렉토리 내용을 컨테이너로 복사
     if (fs.existsSync('dist')) {
-      const distItems = fs.readdirSync('dist')
-      for (const item of distItems) {
-        const srcPath = path.join('dist', item)
-        const destPath = path.join(customDir, item)
-
-        // 복사
-        fs.cpSync(srcPath, destPath, { recursive: true })
-      }
+      runCommand(`docker cp dist/. ${CONTAINER_NAME}:/home/node/.n8n/custom/`)
+      log('green', '✓ 파일 복사 완료')
+    } else {
+      log('red', '❌ dist 디렉토리를 찾을 수 없습니다.')
+      return false
     }
 
     return true
