@@ -275,8 +275,7 @@ rag-price-tracker/
 ├── .gitignore                  # Git 제외 파일
 ├── n8n_data/                   # n8n 워크플로우 데이터 (git 제외)
 ├── nodes/                      # 커스텀 n8n 노드들
-├── workflows/                  # 워크플로우 템플릿
-└── credentials/                # 인증 정보 템플릿
+└── workflows/                  # 워크플로우 템플릿
 ```
 
 ### 주요 특징
