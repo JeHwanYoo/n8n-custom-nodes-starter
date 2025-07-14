@@ -1,7 +1,7 @@
 {
-  "name": "rag-price-tracker-nodes",
+  "name": "n8n-custom-nodes-starter",
   "version": "1.0.0",
-  "description": "RAG Price Tracker - n8n Custom Nodes",
+  "description": "n8n Custom Nodes Development Starter Kit with Docker",
   "type": "module",
   "scripts": {
     "clean": "rm -rf dist",
